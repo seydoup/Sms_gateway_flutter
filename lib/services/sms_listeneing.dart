@@ -1,10 +1,11 @@
-import 'package:telephony/telephony.dart';
+import 'package:another_telephony/telephony.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'new_form.dart';
 import 'sms_history.dart';
 
+@pragma("vm:entry-point")
 class SmsService {
   static final Telephony telephony = Telephony.instance;
   static bool _isListening = false;
@@ -81,6 +82,7 @@ class SmsService {
   }
 
   // Gestionnaire pour les SMS en arrière-plan - DOIT être une fonction statique top-level
+  @pragma("vm:entry-point")
   static _handleBackgroundSms(SmsMessage message) {
     print("SMS reçu en arrière-plan: ${message.body}");
     _processSmsMessage(message);
@@ -249,6 +251,7 @@ class SmsService {
       final prefs = await SharedPreferences.getInstance();
       final historyJson = prefs.getStringList('sms_history') ?? [];
       
+      print("[SmsService] getHistory finished");
       return historyJson
           .map((json) => HistoryItem.fromJson(jsonDecode(json)))
           .toList();
